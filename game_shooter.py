@@ -23,24 +23,26 @@ pygame.init()
 pygame.mixer.init()
 pantalla = pygame.display.set_mode((ancho, alto))
 pygame.display.set_caption("Game Kirby Shooter")
+icon = pygame.image.load("elementos/kirby_icon.png")
+pygame.display.set_icon(icon)
 clock = pygame.time.Clock()
 
 def Text(surface, text, size, x, y):
-    font = pygame.font.SysFont("serif", size)
+    font = pygame.font.Font("elementos/font/ZeroCool.ttf", size)
     text_surface = font.render(text, True, blanco)
     text_rect = text_surface.get_rect(  )
     text_rect.midtop = (x, y)
     surface.blit(text_surface, text_rect)
 
 def TextEnter(surface, text, size, x, y):
-    font = pygame.font.SysFont("serif", size)
-    text_surface = font.render(text, True, gris_oscuro)
+    font = pygame.font.Font("elementos/font/ZeroCool.ttf", size)
+    text_surface = font.render(text, True, negro)
     text_rect = text_surface.get_rect(  )
     text_rect.midtop = (x, y)
     surface.blit(text_surface, text_rect)
 
 def Indication(surface, text, size, x, y):
-    font = pygame.font.SysFont("serif", size)
+    font = pygame.font.Font("elementos/font/ZeroCool.ttf", size)
     text_surface = font.render(text, True, gris)
     text_rect = text_surface.get_rect(  )
     text_rect.midtop = (x, y)
@@ -178,15 +180,15 @@ def show_go_screen():
 
 def pantalla_game_over(surface, text, score, enemies_killed, best_score, size, x, y):
     pantalla.blit(background, [0, 0])
-    font_title = pygame.font.SysFont("serif", size)
-    font_details = pygame.font.SysFont("serif", size - 28)
-    font_details2 = pygame.font.SysFont("serif", size - 18)
-    font_details3 = pygame.font.SysFont("serif", size - 45)   # Tamaño de letra para detalles
+    font_title = pygame.font.Font("elementos/font/ZeroCool.ttf", size)
+    font_details = pygame.font.Font("elementos/font/ZeroCool.ttf", size - 28)
+    font_details2 = pygame.font.Font("elementos/font/ZeroCool.ttf", size - 18)
+    font_details3 = pygame.font.Font("elementos/font/ZeroCool.ttf", size - 45)   # Tamaño de letra para detalles
     text_surface = font_title.render(text, True, rojo)  # Puedes ajustar el color como desees
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x // 2, y // 4 - 40)
     surface.blit(text_surface, text_rect)
-    text_surface2 = font_details3.render("ENTER to play again", True, gris_oscuro)
+    text_surface2 = font_details3.render("ENTER to Menu", True, negro)
     text_rect2 = text_surface2.get_rect()
     text_rect2.midtop = (x // 2, y // 2 + 166)
     surface.blit(text_surface2, text_rect2)
@@ -305,17 +307,20 @@ while running:
 
         if player.shield <= 0:
             game_over = True
-            kirby_dead.play()   
+            kirby_dead.play()
+            # Puedes reemplazar estos valores con tus propias variables de puntuación y enemigos derrotados
+            pantalla_game_over(pantalla, "GAME OVER", score, score // 15, mejor_puntaje, 65, ancho, alto)   
     # Una vez que se sale del bucle principal (fin del juego), mostrar la pantalla de fin de juego
             pantalla.fill(negro)  # Limpia la pantalla
-
-        # Puedes reemplazar estos valores con tus propias variables de puntuación y enemigos derrotados
-            pantalla_game_over(pantalla, "GAME OVER", score, score // 15, mejor_puntaje, 65, ancho, alto)
             pygame.display.flip()  # Actualiza la pantalla
             
     if score > mejor_puntaje:
         mejor_puntaje = score
-        
+        def puntaje_mas_alto(nuevo_puntaje):
+            with open("mejor_puntaje.txt", "w") as file:
+                file.write(str(nuevo_puntaje))
+        puntaje_mas_alto(mejor_puntaje)
+      
     pantalla.blit(background, [0, 0])
     all_sprites.draw(pantalla)
 
